@@ -29,7 +29,7 @@ KERNEL_SRC="$LAB_ROOT/linux-6.6"
 # Packages to install in the rootfs
 PACKAGES_BASE="systemd systemd-sysv udev kmod"
 PACKAGES_NET="ifupdown iproute2 iputils-ping net-tools openssh-server curl wget"
-PACKAGES_DEV="build-essential gcc g++ make gdb strace ltrace"
+PACKAGES_DEV="build-essential gcc g++ make gdb strace "
 PACKAGES_EDIT="vim nano less"
 PACKAGES_UTIL="procps htop tree file man-db bash-completion"
 PACKAGES_DEBUG="linux-perf crash"
