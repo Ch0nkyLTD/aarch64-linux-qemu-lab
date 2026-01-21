@@ -196,7 +196,8 @@ iface enp0s1 inet dhcp
 EOF
 
 # --- Root Password (root:root) ---
-echo "root:root" | chroot "$MOUNT_DIR" chpasswd
+# In some systems this might fails with "No such file or directory", if so, use full path: /usr/sbin/chpasswd
+echo "root:root" | chroot "$MOUNT_DIR" chpasswd 
 
 # --- Enable Serial Console ---
 chroot "$MOUNT_DIR" systemctl enable serial-getty@ttyAMA0.service 2>/dev/null || true
