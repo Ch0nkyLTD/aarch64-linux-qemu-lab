@@ -62,15 +62,31 @@ help:
 # ==============================================================================
 
 deps:
-	@echo ">>> Installing dependencies..."
-	sudo apt update
-	sudo apt install -y \
-		qemu-system-aarch64 qemu-system-arm \
-		gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
-		gdb-multiarch \
-		build-essential bison flex libncurses-dev libssl-dev \
-		libelf-dev git cpio bc \
-		debootstrap qemu-user-static binfmt-support qemu-utils
+	@if command -v pacman &>/dev/null; then \
+		echo ">>> Installing dependencies for Arch Linux..."; \
+		sudo pacman -Sy --noconfirm; \
+		sudo pacman -S --needed \
+			qemu-system-arm qemu-system-aarch64 qemu-img \
+			aarch64-linux-gnu-gcc aarch64-linux-gnu-glibc aarch64-linux-gnu-binutils \
+			gdb \
+			base-devel bison flex ncurses openssl \
+			libelf git cpio bc \
+			debootstrap qemu-user qemu-user-static-binfmt; \
+		sudo systemctl restart systemd-binfmt; \
+	elif command -v apt &>/dev/null; then \
+		echo ">>> Installing dependencies for Debian/Ubuntu..."; \
+		sudo apt update; \
+		sudo apt install -y \
+			qemu-system-aarch64 qemu-system-arm \
+			gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
+			gdb-multiarch \
+			build-essential bison flex libncurses-dev libssl-dev \
+			libelf-dev git cpio bc \
+			debootstrap qemu-user-static binfmt-support qemu-utils; \
+	else \
+		echo ">>> Unsupported distro."; \
+		exit 1; \
+	fi
 
 kernel:
 	@echo ">>> Building kernel..."
@@ -98,7 +114,11 @@ nodebug:
 
 debug:
 	@echo ">>> Starting GDB..."
-	gdb-multiarch -x .gdbinit
+	@if command -v gdb-multiarch &>/dev/null; then \
+		gdb-multiarch -x .gdbinit; \
+	else \
+		gdb -x .gdbinit; \
+	fi
 
 # ==============================================================================
 # Snapshot Targets
