@@ -73,8 +73,17 @@ trap cleanup EXIT
 
 # --- Install Build Dependencies ---
 echo ">>> Step 1: Installing host dependencies..."
-apt-get update -qq
-apt-get install -y debootstrap qemu-user-static binfmt-support qemu-utils
+if command -v pacman &>/dev/null; then
+	pacman -Sy --noconfirm
+	pacman -S --needed --noconfirm debootstrap qemu-user qemu-user-static-binfmt
+	systemctl restart systemd-binfmt
+elif command -v apt &>/dev/null; then
+	apt-get update -qq
+	apt-get install -y debootstrap qemu-user-static binfmt-support qemu-utils
+else
+	echo ">>> Unsupported distro. Install manually: debootstrap, qemu-user-static, qemu-utils."
+	exit 1
+fi
 
 # ==============================================================================
 # PHASE 1: The Base Image (Raw)
