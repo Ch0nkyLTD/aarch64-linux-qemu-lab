@@ -1,3 +1,10 @@
+
+.gdb_history
+debian-rootfs-base.img
+debian-rootfs.qcow2
+debian-runtime.qcow2
+linux-6.6/
+modules/*/build/
 # Prerequisites
 *.d
 

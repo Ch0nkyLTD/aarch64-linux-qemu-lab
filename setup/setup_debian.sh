@@ -213,9 +213,10 @@ mkdir -p "$MOUNT_DIR/mnt"
 # --- Convenience script to mount shared folder ---
 cat <<'EOF' > "$MOUNT_DIR/usr/local/bin/mount-shared"
 #!/bin/bash
-if ! mountpoint -q /mnt; then
-    mount -t 9p -o trans=virtio,version=9p2000.L hostshare /mnt && \
-    echo "Shared folder mounted at /mnt"
+mkdir -p /mnt/shared
+if ! mountpoint -q /mnt/shared; then
+    mount -t 9p -o trans=virtio,version=9p2000.L hostshare /mnt/shared && \
+    echo "Shared folder mounted at /mnt/shared"
 else
     echo "Shared folder already mounted at /mnt"
 fi
